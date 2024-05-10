@@ -20,6 +20,10 @@ const metadata = {
                     name: "updatedAt",
                     type: "DateTime",
                     attributes: [{ "name": "@updatedAt", "args": [] }],
+                }, published: {
+                    name: "published",
+                    type: "Boolean",
+                    attributes: [{ "name": "@default", "args": [{ "value": false }] }],
                 }, createdBy: {
                     name: "createdBy",
                     type: "User",
@@ -30,8 +34,10 @@ const metadata = {
                 }, createdById: {
                     name: "createdById",
                     type: "String",
+                    attributes: [{ "name": "@default", "args": [] }],
                     isForeignKey: true,
                     relationField: 'createdBy',
+                    defaultValueProvider: $default$Post$createdById,
                 },
             }
             , uniqueConstraints: {
@@ -244,4 +250,7 @@ const metadata = {
     ,
     authModel: 'User'
 };
+function $default$Post$createdById(user: any): unknown {
+    return user?.id;
+}
 export default metadata;
