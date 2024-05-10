@@ -58,10 +58,17 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    password      String @password @omit
     image         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+
+    // everyone can signup, and user profile is also publicly readable
+    @@allow('create,read', true)
+
+    // only the user can update or delete their own profile
+    @@allow('update,delete', auth() == this)
 }
 
 model VerificationToken {
