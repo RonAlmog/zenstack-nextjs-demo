@@ -5,13 +5,13 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
+// import DiscordProvider from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
-import { env } from "@/env";
+// import { env } from "@/env";
 import { db } from "@/server/db";
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -91,8 +91,10 @@ function authorize(prisma: PrismaClient) {
     });
     if (!maybeUser?.password) return null;
     // verify the input password with stored hash
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const isValid = await compare(credentials.password, maybeUser.password);
+    const isValid = await compare(
+      credentials.password,
+      maybeUser.password as string,
+    );
     if (!isValid) return null;
     return { id: maybeUser.id, email: maybeUser.email };
   };
